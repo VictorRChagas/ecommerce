@@ -10,14 +10,10 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -52,8 +48,16 @@ public class PaymentController extends CrudRestController<Payment, Long> {
         var payment = modelMapper.map(dto, Payment.class);
         var entityModel = paymentModelAssembler.toModel(paymentService.save(payment));
 
-        return ResponseEntity
-                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(entityModel);
+        return ResponseEntity.ok(entityModel);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<EntityModel<Payment>> updateById(@PathVariable("id") Long id, @RequestBody PaymentPersistDto dto) {
+        LOGGER.debug("Updating consumer");
+        var payment = paymentService.findById(id);
+        modelMapper.map(dto, payment);
+        var entityModel = paymentModelAssembler.toModel(paymentService.save(payment));
+
+        return ResponseEntity.ok(entityModel);
     }
 }

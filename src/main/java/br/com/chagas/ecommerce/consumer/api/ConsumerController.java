@@ -58,7 +58,6 @@ public class ConsumerController extends CrudRestController<Consumer, Long> {
     @PutMapping("{id}")
     public ResponseEntity<EntityModel<Consumer>> updateById(@PathVariable("id") Long id, @RequestBody ConsumerPersistDto dto) {
         LOGGER.debug("Updating consumer");
-
         var consumer = consumerService.findById(id);
         modelMapper.map(dto, consumer);
         var entityModel = consumerModelAssembler.toModel(consumerService.save(consumer));

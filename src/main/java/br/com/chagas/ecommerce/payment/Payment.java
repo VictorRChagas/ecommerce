@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
@@ -39,11 +38,11 @@ public class Payment implements Serializable {
     }
 
     public Payment(@NotNull String name, @NotNull Long installments) {
-        this.setName(name);
+        this.setMode(name);
         this.setInstallments(installments);
     }
 
-    public void setName(String mode) {
+    public void setMode(String mode) {
         if (Objects.isNull(mode) || mode.isEmpty()) {
             throw new IllegalArgumentException("Name must not be null or empty");
         }

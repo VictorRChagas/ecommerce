@@ -10,6 +10,6 @@ public class PaymentModelAssembler implements RepresentationModelAssembler<Payme
 
     @Override
     public EntityModel<Payment> toModel(Payment entity) {
-        return null;
+        return EntityModel.of(entity);
     }
 }
