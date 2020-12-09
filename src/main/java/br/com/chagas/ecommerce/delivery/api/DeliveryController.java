@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -48,9 +47,7 @@ public class DeliveryController extends CrudRestController<Delivery, Long> {
         var delivery = modelMapper.map(dto, Delivery.class);
         var entityModel = deliveryModelAssembler.toModel(service.save(delivery));
 
-        return ResponseEntity
-                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(entityModel);
+        return ResponseEntity.ok(entityModel);
     }
 
     @PutMapping("{id}")
