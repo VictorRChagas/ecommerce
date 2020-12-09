@@ -10,6 +10,6 @@ public class OrderModelAssembler implements RepresentationModelAssembler<Order, 
 
     @Override
     public EntityModel<Order> toModel(Order entity) {
-        return null;
+        return EntityModel.of(entity);
     }
 }

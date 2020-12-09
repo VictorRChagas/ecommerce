@@ -9,14 +9,10 @@ import br.com.chagas.ecommerce.order.dto.OrderPersistDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -52,8 +48,18 @@ public class OrderController extends CrudRestController<Order, Long> {
         var order = orderFactory.buildOrder(orderPersistDto);
         var entityModel = orderModelAssembler.toModel(service.save(order));
 
-        return ResponseEntity
-                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(entityModel);
+        return ResponseEntity.ok(entityModel);
+    }
+
+    @PostMapping("{id}}")
+    public ResponseEntity<Boolean> approveOrder(@PathVariable("id") Long orderId) {
+        LOGGER.debug("Approving order id: {}", orderId);
+        return ResponseEntity.ok(service.approveOrder(orderId));
+    }
+
+    @PostMapping("cancel-order/{id}}")
+    public ResponseEntity<Boolean> cancelOrder(@PathVariable("id") Long orderId) {
+        LOGGER.debug("Cancelling order id: {}", orderId);
+        return ResponseEntity.ok(service.cancelOrder(orderId));
     }
 }

@@ -22,11 +22,9 @@ public class Product implements Serializable {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "DESCRICAO", nullable = false, length = 100)
+    @Column(name = "NAME", nullable = false, length = 100)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private ProductDetails productDetails;
 
     @Deprecated
     public Product() {
@@ -46,6 +44,6 @@ public class Product implements Serializable {
     }
 
     public void setProductDetails(@NonNull ProductDetails productDetails) {
-        this.productDetails = Objects.requireNonNull(productDetails, "Value must not be null");
+//        this.productDetails = Objects.requireNonNull(productDetails, "Value must not be null");
     }
 }

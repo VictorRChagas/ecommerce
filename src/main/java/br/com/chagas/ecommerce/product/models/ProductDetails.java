@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Getter
 @Entity
-@Table(name = "PRODUCT")
+@Table(name = "PRODUCT_DETAILS")
 @EqualsAndHashCode(of = "id")
 public class ProductDetails {
     @Id

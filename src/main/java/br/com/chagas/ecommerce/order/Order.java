@@ -5,19 +5,18 @@ import br.com.chagas.ecommerce.delivery.Delivery;
 import br.com.chagas.ecommerce.order.dto.OrderPersistDto;
 import br.com.chagas.ecommerce.payment.Payment;
 import br.com.chagas.ecommerce.productOrder.ProductOrder;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
-@Table(name = "ORDER")
+@Table(name = "ORDERING")
 @EqualsAndHashCode(of = "id")
 public class Order {
 
@@ -28,22 +27,29 @@ public class Order {
 
     @NotNull
     @ManyToOne(optional = false)
-    @JoinColumn(name = "ID_CONSUMER")
+    @JoinColumn(name = "ID_CONSUMER", nullable = false)
     private Consumer consumer;
 
     @NotNull
     @ManyToOne(optional = false)
-    @JoinColumn(name = "ID_PAYMENT")
+    @JoinColumn(name = "ID_PAYMENT", nullable = false)
     private Payment payment;
 
     @NotNull
     @ManyToOne(optional = false)
-    @JoinColumn(name = "ID_DELIVERY")
+    @JoinColumn(name = "ID_DELIVERY", nullable = false)
     private Delivery delivery;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private Set<ProductOrder> productSet = new HashSet<>();
+    @JsonIgnore
+    @Column(name = "STATUS", nullable = false)
+    private OrderStatus orderStatus;
+
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+//    private Set<ProductOrder> productSet = new HashSet<>();
+
+    @NotNull
+    private transient String status;
 
     /***
      * default construtor necessary for hibernate
@@ -56,11 +62,19 @@ public class Order {
         this.consumer = new Consumer(orderPersistDto.getConsumerId());
         this.delivery = new Delivery(orderPersistDto.getDeliveryId());
         this.payment = new Payment(orderPersistDto.getPaymentId());
-        this.productSet = orderPersistDto.getProductIds().stream()
-                .map(ProductOrder::new).collect(Collectors.toSet());
+//        this.productSet = orderPersistDto.getProductIds().stream()
+//                .map(ProductOrder::new).collect(Collectors.toSet());
     }
 
     public void setProductSet(Set<ProductOrder> productSet) {
-        this.productSet = productSet;
+//        this.productSet = productSet;
+    }
+
+    public void setOrderStatus(@NotNull OrderStatus status) {
+        this.orderStatus = Objects.requireNonNull(status, "Status mut no be null");
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

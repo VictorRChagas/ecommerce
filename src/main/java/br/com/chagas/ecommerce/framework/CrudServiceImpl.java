@@ -13,18 +13,34 @@ public abstract class CrudServiceImpl<T, ID> implements CrudService<T, ID> {
 
     @Override
     public Page<T> findAll(PageRequest pageable) {
-        return getRepository().findAll(pageable);
+        var all = getRepository().findAll(pageable);
+        postFindAll(all);
+        return all;
+    }
+
+    protected void postFindAll(Page<T> all) {
     }
 
     @Override
     public T findById(ID id) {
-        return getRepository().findById((ID) id)
+        var object = getRepository().findById((ID) id)
                 .orElseThrow(NoResultException::new);
+        postFindOne(object);
+        return object;
+
+    }
+
+    protected void postFindOne(T object) {
     }
 
     @Override
     public T save(T entity) {
+        preSave(entity);
         return getRepository().save(entity);
+    }
+
+    protected void preSave(T entity) {
+
     }
 
     @Override

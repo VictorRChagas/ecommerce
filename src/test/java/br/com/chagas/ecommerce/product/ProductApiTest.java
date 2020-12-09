@@ -41,7 +41,7 @@ public class ProductApiTest {
     @Test
     @DisplayName("make sure save method in service is called")
     void saveMethodInServiceIsCalled() {
-        var productPersistDto = new ProductPersistDto("Computer", BigDecimal.valueOf(899));
+        var productPersistDto = new ProductPersistDto("Computer");
         productController.save(productPersistDto);
         verify(productService).save(any(Product.class));
     }

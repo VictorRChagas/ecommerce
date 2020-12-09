@@ -10,7 +10,6 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -50,9 +49,7 @@ public class ConsumerController extends CrudRestController<Consumer, Long> {
         var consumer = modelMapper.map(dto, Consumer.class);
         var entityModel = consumerModelAssembler.toModel(consumerService.save(consumer));
 
-        return ResponseEntity
-                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(entityModel);
+        return ResponseEntity.ok(entityModel);
     }
 
     @PutMapping("{id}")
@@ -62,7 +59,6 @@ public class ConsumerController extends CrudRestController<Consumer, Long> {
         modelMapper.map(dto, consumer);
         var entityModel = consumerModelAssembler.toModel(consumerService.save(consumer));
 
-        return ResponseEntity
-                .ok(entityModel);
+        return ResponseEntity.ok(entityModel);
     }
 }

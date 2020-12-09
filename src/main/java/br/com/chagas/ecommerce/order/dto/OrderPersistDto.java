@@ -19,6 +19,7 @@ public class OrderPersistDto {
     @NotNull
     private Long deliveryId;
 
+    @NotNull
     private List<Long> productIds;
 
 }
