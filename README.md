@@ -1,4 +1,4 @@
-<h1>First of all I would like to thank for being able to participate of the selective procces!</h1>
+<h1>First of all I would like to thank for being able to participate of the selective process!</h1>
 
 <h2>Greetings, Developer(s)!</h2>
 
