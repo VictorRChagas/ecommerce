@@ -10,6 +10,6 @@ public class ManufacturerModelAssembler implements RepresentationModelAssembler<
 
     @Override
     public EntityModel<Manufacturer> toModel(Manufacturer entity) {
-        return null;
+        return EntityModel.of(entity);
     }
 }
