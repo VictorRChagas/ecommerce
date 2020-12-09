@@ -1,11 +1,13 @@
 package br.com.chagas.ecommerce.order.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
+@AllArgsConstructor
 public class OrderPersistDto {
 
     @NotNull

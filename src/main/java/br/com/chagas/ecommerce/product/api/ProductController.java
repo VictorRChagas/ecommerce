@@ -43,11 +43,6 @@ public class ProductController extends CrudRestController<Product, Long> {
         return productModelAssembler;
     }
 
-    @Override
-    public Class<?> getClazz() {
-        return this.getClass();
-    }
-
     @PostMapping
     public ResponseEntity<EntityModel<Product>> save(@NonNull @Valid @RequestBody ProductPersistDto productPersist) {
         LOGGER.debug("Saving new Product");

@@ -1,17 +1,20 @@
 package br.com.chagas.ecommerce.payment;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Getter
 @Entity
 @ToString(of = "id")
 @Table(name = "PAYMENT")
+@EqualsAndHashCode(of = "id")
 public class Payment implements Serializable {
 
     @Id
@@ -20,12 +23,11 @@ public class Payment implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "NAME", nullable = false, length = 100)
-    private String name;
+    @Column(name = "MODE", nullable = false, length = 100)
+    private String mode;
 
-    @Email
     @NotNull
-    @Column(name = "EMAIL", nullable = false, scale = 10, precision = 2)
+    @Column(name = "INSTALLMENTS", nullable = false, scale = 10, precision = 2)
     private Long installments;
 
     @Deprecated
@@ -34,5 +36,21 @@ public class Payment implements Serializable {
 
     public Payment(Long id) {
         this.id = id;
+    }
+
+    public Payment(@NotNull String name, @NotNull Long installments) {
+        this.setName(name);
+        this.setInstallments(installments);
+    }
+
+    public void setName(String mode) {
+        if (Objects.isNull(mode) || mode.isEmpty()) {
+            throw new IllegalArgumentException("Name must not be null or empty");
+        }
+        this.mode = mode;
+    }
+
+    public void setInstallments(@NotNull Long installments) {
+        this.installments = Objects.requireNonNull(installments, "Installments must not be null");
     }
 }

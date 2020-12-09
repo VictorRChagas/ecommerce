@@ -46,11 +46,6 @@ public class OrderController extends CrudRestController<Order, Long> {
         return orderModelAssembler;
     }
 
-    @Override
-    public Class<?> getClazz() {
-        return this.getClass();
-    }
-
     @PostMapping
     public ResponseEntity<EntityModel<Order>> save(@NonNull @Valid @RequestBody OrderPersistDto orderPersistDto) {
         LOGGER.debug("Saving new order");

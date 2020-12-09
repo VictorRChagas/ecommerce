@@ -24,8 +24,7 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long> implement
 
     @Override
     public Product update(ProductUpdateDto productUpdateDto, Product product) {
-        JsonUtil.changeIfPresent(productUpdateDto.getDescricao(), product::setName);
-        JsonUtil.changeIfPresent(productUpdateDto.getValor(), product::setValor);
+//        JsonUtil.changeIfPresent(productUpdateDto.getDescricao(), product::setName);
         return repository.save(product);
     }
 }

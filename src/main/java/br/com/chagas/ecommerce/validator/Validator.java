@@ -17,8 +17,11 @@ public class Validator {
 
     public static Predicate<String> isNull = Objects::isNull;
 
-    public static <T> void ifTrueOrElse(Predicate<T> predicate, Consumer<T> consumer, Runnable runnable) {
-
+    public static String ifNullOrEmptyThrows(String value, Exception exception) throws Exception {
+        if (Objects.isNull(value) || value.isBlank()) {
+            throw exception;
+        }
+        return value;
     }
 
 }

@@ -21,17 +21,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 public abstract class CrudRestController<T, ID> {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(getClazz());
+    private final Logger LOGGER = LoggerFactory.getLogger("crudrest");
 
     public abstract CrudService<T, ID> getService();
     public abstract RepresentationModelAssembler<T, EntityModel<T>> getRepresentationModelAssembler();
-    public abstract Class<?> getClazz();
 
     @GetMapping
     public CollectionModel<EntityModel<T>> findAll(
             @NonNull @RequestParam(value = "size", defaultValue = "10", required = false) Integer size,
             @NonNull @RequestParam(value = "page", defaultValue = "0", required = false) Integer page) {
-        LOGGER.debug("Fetching all {}", getClazz().getName());
+        LOGGER.debug("Fetching all {}");
         var pageable = PageRequest.of(page, size);
 
         var objectList = getService().findAll(pageable)
@@ -43,7 +42,7 @@ public abstract class CrudRestController<T, ID> {
 
     @GetMapping("{query}")
     public EntityModel<T> findById(@NonNull @PathVariable("id") ID id) {
-        LOGGER.debug("Searching {} by id {}", getClazz().getName(), id);
+        LOGGER.debug("Searching by id {}", id);
         return getRepresentationModelAssembler().toModel(getService().findById(id));
     }
 

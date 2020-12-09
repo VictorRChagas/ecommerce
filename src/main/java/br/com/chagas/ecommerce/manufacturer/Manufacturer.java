@@ -1,6 +1,7 @@
 package br.com.chagas.ecommerce.manufacturer;
 
 import br.com.chagas.ecommerce.validator.Validator;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @ToString(of = "id")
 @Table(name = "MANUFACTURER")
+@EqualsAndHashCode(of = "id")
 public class Manufacturer {
 
     @Id
@@ -35,10 +37,7 @@ public class Manufacturer {
     }
 
     public void setName(String name) {
-        var isInvalid = Validator.isNull
-                .and(Validator.isEmpty)
-                .negate()
-                .test(name);
+        var isInvalid = Validator.isNull.or(Validator.isEmpty).test(name);
         if (isInvalid) {
             throw new IllegalArgumentException("Name must no be null or empty");
         }

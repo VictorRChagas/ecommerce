@@ -1,5 +1,7 @@
 package br.com.chagas.ecommerce.consumer;
 
+import br.com.chagas.ecommerce.validator.Validator;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -7,11 +9,13 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Getter
 @Entity
 @ToString(of = "id")
 @Table(name = "CONSUMER")
+@EqualsAndHashCode(of = "id")
 public class Consumer {
 
     @Id
@@ -40,15 +44,18 @@ public class Consumer {
     }
 
     public Consumer(@NotNull String name, @Email @NotNull String email) {
-        this.setEmail(name);
+        this.setName(name);
         this.setEmail(email);
     }
 
     public void setName(@NotNull @NotEmpty String name) {
-        this.name = name;
+        this.name = Objects.requireNonNull(name, "Name must not be null");
     }
 
     public void setEmail(@Email String email) {
-        this.email = email;
+        if (!Validator.isEmail.test(email)) {
+            throw new IllegalArgumentException("Email is not valid");
+        }
+        this.email = Objects.requireNonNull(email, "Email must not be null");;
     }
 }

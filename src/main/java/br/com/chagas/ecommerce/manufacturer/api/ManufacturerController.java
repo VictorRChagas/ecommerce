@@ -1,9 +1,11 @@
 package br.com.chagas.ecommerce.manufacturer.api;
 
+import br.com.chagas.ecommerce.delivery.dto.DeliveryPersistDto;
 import br.com.chagas.ecommerce.framework.CrudRestController;
 import br.com.chagas.ecommerce.framework.CrudService;
 import br.com.chagas.ecommerce.manufacturer.Manufacturer;
 import br.com.chagas.ecommerce.manufacturer.ManufacturerService;
+import br.com.chagas.ecommerce.manufacturer.dto.ManufacturerPersistDto;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +33,7 @@ public class ManufacturerController extends CrudRestController<Manufacturer, Lon
         return manufacturerModelAssembler;
     }
 
-    @Override
-    public Class<?> getClazz() {
-        return this.getClass();
+    public void save(ManufacturerPersistDto manufacturerPersistDto) {
+
     }
 }

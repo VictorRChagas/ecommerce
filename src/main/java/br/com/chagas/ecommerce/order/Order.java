@@ -6,6 +6,7 @@ import br.com.chagas.ecommerce.order.dto.OrderPersistDto;
 import br.com.chagas.ecommerce.payment.Payment;
 import br.com.chagas.ecommerce.productOrder.ProductOrder;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @Table(name = "ORDER")
+@EqualsAndHashCode(of = "id")
 public class Order {
 
     @Id

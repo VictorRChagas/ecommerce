@@ -1,16 +1,20 @@
 package br.com.chagas.ecommerce.product.models;
 
+import br.com.chagas.ecommerce.validator.Validator;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 
+@Getter
 @Entity
 @ToString(of = "id")
 @Table(name = "PRODUCT")
+@EqualsAndHashCode(of = "id")
 public class Product implements Serializable {
 
     @Id
@@ -20,9 +24,6 @@ public class Product implements Serializable {
 
     @Column(name = "DESCRICAO", nullable = false, length = 100)
     private String name;
-
-    @Column(name = "VALOR", nullable = false, scale = 10, precision = 2)
-    private BigDecimal valor;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private ProductDetails productDetails;
@@ -35,42 +36,16 @@ public class Product implements Serializable {
         this.id = id;
     }
 
-    private Product(@NonNull String descricao, @NonNull BigDecimal valor) {
-        setName(descricao);
-        setValor(valor);
+    public Product(@NonNull String descricao, @NonNull ProductDetails productDetails) throws Exception {
+        this.setName(descricao);
+        this.setProductDetails(productDetails);
     }
 
-    public Long getId() {
-        return id;
+    public void setName(@NonNull String descricao) throws Exception {
+        this.name = Validator.ifNullOrEmptyThrows(descricao, new IllegalArgumentException("Description must not be null"));
     }
 
-    public String getName() {
-        return name;
+    public void setProductDetails(@NonNull ProductDetails productDetails) {
+        this.productDetails = Objects.requireNonNull(productDetails, "Value must not be null");
     }
-
-    public BigDecimal getValor() {
-        return valor;
-    }
-
-    public void setName(@NonNull String descricao) {
-        this.name = Objects.requireNonNull(descricao, "Description must not be null");
-    }
-
-    public void setValor(@NonNull BigDecimal valor) {
-        this.valor = Objects.requireNonNull(valor, "Value must not be null");
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return Objects.equals(id, product.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
 }

@@ -1,16 +1,19 @@
 package br.com.chagas.ecommerce.delivery;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Entity
 @Table(name = "DELIVERY")
 @Getter
 @ToString(of = "id")
+@EqualsAndHashCode(of = "id")
 public class Delivery {
 
     @Id
@@ -38,6 +41,9 @@ public class Delivery {
     }
 
     public void setMode(@NotNull @NotEmpty String mode) {
+        if (Objects.isNull(mode) || mode.isBlank()) {
+            throw new IllegalArgumentException("mode must not be empty or null");
+        }
         this.mode = mode;
     }
 }

@@ -45,11 +45,6 @@ public class DeliveryController extends CrudRestController<Delivery, Long> {
         return deliveryModelAssembler;
     }
 
-    @Override
-    public Class<?> getClazz() {
-        return this.getClass();
-    }
-
     @PostMapping
     public ResponseEntity<EntityModel<Delivery>> save(@NonNull @Valid @RequestBody DeliveryPersistDto dto) {
         LOGGER.debug("Saving new Delivery");
