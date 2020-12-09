@@ -10,6 +10,6 @@ public class ConsumerModelAssembler implements RepresentationModelAssembler<Cons
 
     @Override
     public EntityModel<Consumer> toModel(Consumer entity) {
-        return null;
+        return EntityModel.of(entity);
     }
 }

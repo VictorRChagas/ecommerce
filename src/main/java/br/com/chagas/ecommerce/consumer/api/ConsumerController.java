@@ -14,10 +14,7 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -56,5 +53,17 @@ public class ConsumerController extends CrudRestController<Consumer, Long> {
         return ResponseEntity
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
                 .body(entityModel);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<EntityModel<Consumer>> updateById(@PathVariable("id") Long id, @RequestBody ConsumerPersistDto dto) {
+        LOGGER.debug("Updating consumer");
+
+        var consumer = consumerService.findById(id);
+        modelMapper.map(dto, consumer);
+        var entityModel = consumerModelAssembler.toModel(consumerService.save(consumer));
+
+        return ResponseEntity
+                .ok(entityModel);
     }
 }

@@ -40,7 +40,7 @@ public abstract class CrudRestController<T, ID> {
         return CollectionModel.of(objectList, linkTo(methodOn(ProductController.class).findAll(size, page)).withSelfRel());
     }
 
-    @GetMapping("{query}")
+    @GetMapping("{id}")
     public EntityModel<T> findById(@NonNull @PathVariable("id") ID id) {
         LOGGER.debug("Searching by id {}", id);
         return getRepresentationModelAssembler().toModel(getService().findById(id));

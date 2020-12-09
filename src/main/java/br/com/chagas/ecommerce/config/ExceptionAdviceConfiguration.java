@@ -43,5 +43,4 @@ public class ExceptionAdviceConfiguration {
                 .map(it -> ResponseEntity.status(HttpStatus.FORBIDDEN).body(it))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getCause().getMessage()));
     }
-
 }
