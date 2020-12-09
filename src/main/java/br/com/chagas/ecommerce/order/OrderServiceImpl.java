@@ -2,11 +2,9 @@ package br.com.chagas.ecommerce.order;
 
 import br.com.chagas.ecommerce.framework.CrudServiceImpl;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
-@RestController
-@RequestMapping("/order")
+@Service
 public class OrderServiceImpl extends CrudServiceImpl<Order, Long> implements OrderService {
 
     private final OrderRepository repository;
@@ -22,7 +20,6 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Long> implements Or
 
     @Override
     public Order save(Order entity) {
-
         return super.save(entity);
     }
 }
