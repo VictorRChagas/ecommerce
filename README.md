@@ -25,4 +25,4 @@ some rules that could be in the client side, of course, it's a trade off when it
 complexity for developing it, but sometimes it can be necessary for
 improving the end user experience.
 
-Feel free to call me for a conversation about methodologies useds, libs, archiceture and anything else. 
+Feel free to call me for a conversation about the used methodologies, libs, archictecture or anything else. 
