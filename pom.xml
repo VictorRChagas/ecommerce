@@ -148,6 +148,14 @@
                     </from>
                     <to>
                         <image>victorchagas/ecommerce:${project.version}</image>
+                        <auth>
+                            <username>
+                                ${env.DOCKERHUB_USERNAME}
+                            </username>
+                            <password>
+                                ${env.DOCKERHUB_TOKEN}
+                            </password>
+                        </auth>
                     </to>
                     <container>
                         <jvmFlags>
