@@ -76,4 +76,16 @@ public class Order {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public void setConsumer(Consumer consumer) {
+        this.consumer = Objects.requireNonNull(consumer, "Consumer must not be null");
+    }
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = Objects.requireNonNull(delivery, "Delivery must not be null");
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = Objects.requireNonNull(payment, "Payment must not be null");
+    }
 }

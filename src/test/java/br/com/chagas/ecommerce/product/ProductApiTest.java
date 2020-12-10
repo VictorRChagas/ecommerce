@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
@@ -75,18 +74,6 @@ public class ProductApiTest {
 
     private ResponseEntity<EntityModel<Product>> getProductDefault() throws Exception {
         return ResponseEntity.ok(EntityModel.of(new Product("Cellphone", getProductDetailsDefault())));
-    }
-
-    @Test
-    @DisplayName("GET / Product / - Sucess")
-    void findAllSucess() throws Exception {
-        var consumerList = productService.findAll(PageRequest.of(1, 2));
-        Mockito.when(productService.findAll(PageRequest.of(1, 1))).thenReturn(consumerList);
-        Mockito.doReturn(consumerList).when(productService).findAll(PageRequest.of(1, 2));
-        mockMvc.perform(MockMvcRequestBuilders.get("/product"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
-                .andExpect(jsonPath("_embedded.products[0].name", Is.is("Samsung Galaxy")));
     }
 
     private ProductDetails getProductDetailsDefault() {

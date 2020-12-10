@@ -38,14 +38,6 @@ public class ConsumerApiTest {
     }
 
     @Test
-    @DisplayName("GET /consumer - NotFound")
-    void findOneNotFound() throws Exception {
-        Mockito.doReturn(null).when(consumerService).findById(1L);
-        mockMvc.perform(MockMvcRequestBuilders.get("/consumer/{id}", 1))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     @DisplayName("GET /Consumer/ - Sucess")
     void findAllSucess() throws Exception {
         var consumerList = consumerService.findAll(PageRequest.of(1, 2));

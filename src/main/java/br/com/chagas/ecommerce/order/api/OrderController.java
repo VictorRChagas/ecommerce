@@ -3,6 +3,7 @@ package br.com.chagas.ecommerce.order.api;
 import br.com.chagas.ecommerce.framework.CrudRestController;
 import br.com.chagas.ecommerce.framework.CrudService;
 import br.com.chagas.ecommerce.order.Order;
+import br.com.chagas.ecommerce.order.OrderConverter;
 import br.com.chagas.ecommerce.order.OrderService;
 import br.com.chagas.ecommerce.order.dto.OrderPersistDto;
 import org.slf4j.Logger;
@@ -10,10 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/order")
@@ -21,12 +21,14 @@ public class OrderController extends CrudRestController<Order, Long, OrderPersis
 
     private final OrderService service;
     private final OrderModelAssembler orderModelAssembler;
+    private final OrderConverter orderConverter;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
 
-    public OrderController(OrderService service, OrderModelAssembler orderModelAssembler) {
+    public OrderController(OrderService service, OrderModelAssembler orderModelAssembler, OrderConverter orderConverter) {
         this.service = service;
         this.orderModelAssembler = orderModelAssembler;
+        this.orderConverter = orderConverter;
     }
 
     @Override
@@ -37,6 +39,15 @@ public class OrderController extends CrudRestController<Order, Long, OrderPersis
     @Override
     public RepresentationModelAssembler<Order, EntityModel<Order>> getRepresentationModelAssembler() {
         return orderModelAssembler;
+    }
+
+    @Override
+    public ResponseEntity<EntityModel<Order>> save(@Valid @RequestBody OrderPersistDto dto) {
+        LOGGER.debug("Saving new order");
+        var order = orderConverter.buildOrder(dto);
+        var entityModel = orderModelAssembler.toModel(service.save(order));
+
+        return ResponseEntity.ok(entityModel);
     }
 
     @PostMapping("approve/{id}")

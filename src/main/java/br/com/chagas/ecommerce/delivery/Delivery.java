@@ -1,5 +1,6 @@
 package br.com.chagas.ecommerce.delivery;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -10,9 +11,10 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
-@Table(name = "DELIVERY")
 @Getter
+@AllArgsConstructor
 @ToString(of = "id")
+@Table(name = "DELIVERY")
 @EqualsAndHashCode(of = "id")
 public class Delivery {
 

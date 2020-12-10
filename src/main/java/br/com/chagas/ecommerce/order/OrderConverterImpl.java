@@ -34,9 +34,7 @@ public class OrderConverterImpl implements OrderConverter {
                                 deliveryService.findById(orderPersistDto.getDeliveryId()));
 
         var productList = productService.findAllByIdList(orderPersistDto.getProductIds());
-
         var productAndAmountMap = orderPersistDto.getUnitByProduct();
-
         var productOrderList = productList.stream()
                 .map(product -> new ProductOrder(product, order, productAndAmountMap.get(product.getId())))
                 .collect(Collectors.toSet());
