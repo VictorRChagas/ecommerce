@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @AllArgsConstructor
@@ -21,5 +22,10 @@ public class OrderPersistDto {
 
     @NotNull
     private List<Long> productIds;
+
+    /***
+     * the key is the product id and the value is the amount of product
+     */
+    private Map<Long, Long> unitByProduct;
 
 }

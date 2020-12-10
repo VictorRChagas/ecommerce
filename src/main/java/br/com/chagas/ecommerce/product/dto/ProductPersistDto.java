@@ -29,6 +29,9 @@ public class ProductPersistDto {
     @NotNull
     private Long manufacturerId;
 
+    @NotNull
+    private Long amountStored;
+
     @Deprecated
     public ProductPersistDto() {
     }

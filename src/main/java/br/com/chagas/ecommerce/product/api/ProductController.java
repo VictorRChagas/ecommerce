@@ -43,9 +43,9 @@ public class ProductController extends CrudRestController<Product, Long> {
     }
 
     @PostMapping
-    public ResponseEntity<EntityModel<Product>> save(@NonNull @Valid @RequestBody ProductPersistDto productPersist) {
+    public ResponseEntity<EntityModel<Product>> save(@NonNull @Valid @RequestBody ProductPersistDto productPersist) throws Exception {
         LOGGER.debug("Saving new Product");
-        var product = new Product(productPersist);;
+        var product = new Product(productPersist);
         var entityModel = productModelAssembler.toModel(productService.save(product));
 
         return ResponseEntity

@@ -35,7 +35,9 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Long> implements Or
 
     @Override
     public Boolean approveOrder(Long orderId) {
-        return repository.approveOrder(orderId) == 1;
+        var toReturn = repository.approveOrder(orderId) == 1;
+        this.applicationEventPublisher.publishEvent(new PostApproveOrderEvent(this, orderId));
+        return toReturn;
     }
 
     @Override

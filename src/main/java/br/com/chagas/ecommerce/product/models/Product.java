@@ -37,6 +37,9 @@ public class Product implements Serializable {
     @JoinColumn(name = "ID_MANUFACTURER", nullable = false)
     private Manufacturer manufacturer;
 
+    @Column(name = "AMOUNT", nullable = false)
+    private Long amountStored;
+
     @Deprecated
     public Product() {
     }
@@ -45,11 +48,12 @@ public class Product implements Serializable {
         this.id = id;
     }
 
-    public Product(ProductPersistDto productPersistDto) {
-        this.name = productPersistDto.getName();
+    public Product(ProductPersistDto productPersistDto) throws Exception {
         this.productDetails = new ProductDetails(productPersistDto);
         this.manufacturer = new Manufacturer(productPersistDto.getManufacturerId());
         this.productDetails.setProduct(this);
+        this.setName(productPersistDto.getName());
+        this.setAmountStored(productPersistDto.getAmountStored());
     }
 
     public Product(@NonNull String descricao, @NonNull ProductDetails productDetails) throws Exception {
@@ -67,5 +71,9 @@ public class Product implements Serializable {
 
     public void setManufacturer(@NotNull Manufacturer manufacturer) {
         this.manufacturer = Objects.requireNonNull(manufacturer, "Value must not be null");
+    }
+
+    public void setAmountStored(Long amountStored) {
+        this.amountStored = Objects.requireNonNull(amountStored, "Amount must not be null");
     }
 }

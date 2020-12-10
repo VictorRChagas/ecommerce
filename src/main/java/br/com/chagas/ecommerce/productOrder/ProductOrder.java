@@ -28,6 +28,9 @@ public class ProductOrder {
     @JoinColumn(name = "ID_PRODUCT")
     private Product product;
 
+    @JoinColumn(name = "UNITS")
+    private Long units;
+
     /***
      * default construtor necessary for hibernate
      */
@@ -35,8 +38,9 @@ public class ProductOrder {
     public ProductOrder() {
     }
 
-    public ProductOrder(@NotNull Product product, @NotNull Order order) {
+    public ProductOrder(@NotNull Product product, @NotNull Order order, Long units) {
         this.product = product;
         this.order = order;
+        this.units = units;
     }
 }

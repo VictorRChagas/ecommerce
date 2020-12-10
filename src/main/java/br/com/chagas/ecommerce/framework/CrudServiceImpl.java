@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
 
 import javax.persistence.NoResultException;
+import java.util.List;
 
 public abstract class CrudServiceImpl<T, ID> implements CrudService<T, ID> {
 
@@ -39,6 +40,11 @@ public abstract class CrudServiceImpl<T, ID> implements CrudService<T, ID> {
         T savedEntity = getRepository().save(entity);
         postSave(savedEntity);
         return savedEntity;
+    }
+
+    @Override
+    public List<T> saveAll(List<T> entityList) {
+        return getRepository().saveAll(entityList);
     }
 
     protected void postSave(T savedEntity) {

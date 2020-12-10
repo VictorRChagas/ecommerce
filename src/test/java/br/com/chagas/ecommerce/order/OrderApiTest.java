@@ -80,6 +80,6 @@ public class OrderApiTest {
     }
 
     private OrderPersistDto getOrderPersistDto() {
-        return new OrderPersistDto(1L,1L,1L, Collections.emptyList());
+        return new OrderPersistDto(1L,1L,1L, Collections.emptyList(), Collections.emptyMap());
     }
 }
