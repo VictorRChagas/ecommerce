@@ -44,7 +44,7 @@ jobs:
         with:
           java-version: 15
       - name: Integrate with sonarcloud
-        run: mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.projectKey=gasparbarancelli_blog -Dsonar.organization=gasparbarancelli -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{secrets.SONARCLOUD_TOKEN}}
+        run: mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.projectKey=ecommercetechnicaltest -Dsonar.organization=jvrc2000 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{secrets.SONARCLOUD_TOKEN}}
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
