@@ -29,8 +29,8 @@ public class ExceptionAdviceConfiguration {
     @ResponseBody
     @ExceptionHandler(NoResultException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String noResultExceptionHandler(NoResultException e) {
-        return e.getMessage();
+    public ResponseEntity<Error> noResultExceptionHandler(NoResultException e) {
+        return ResponseEntity.of(Optional.of(new Error(e.getMessage())));
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)

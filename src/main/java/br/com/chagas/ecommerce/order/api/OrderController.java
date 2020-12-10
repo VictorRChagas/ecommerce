@@ -3,7 +3,6 @@ package br.com.chagas.ecommerce.order.api;
 import br.com.chagas.ecommerce.framework.CrudRestController;
 import br.com.chagas.ecommerce.framework.CrudService;
 import br.com.chagas.ecommerce.order.Order;
-import br.com.chagas.ecommerce.order.OrderConverter;
 import br.com.chagas.ecommerce.order.OrderService;
 import br.com.chagas.ecommerce.order.dto.OrderPersistDto;
 import org.slf4j.Logger;
@@ -22,14 +21,12 @@ public class OrderController extends CrudRestController<Order, Long, OrderPersis
 
     private final OrderService service;
     private final OrderModelAssembler orderModelAssembler;
-    private final OrderConverter orderConverter;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
 
-    public OrderController(OrderService service, OrderModelAssembler orderModelAssembler, OrderConverter orderConverter) {
+    public OrderController(OrderService service, OrderModelAssembler orderModelAssembler) {
         this.service = service;
         this.orderModelAssembler = orderModelAssembler;
-        this.orderConverter = orderConverter;
     }
 
     @Override

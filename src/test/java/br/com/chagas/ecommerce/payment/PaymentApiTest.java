@@ -1,7 +1,8 @@
 package br.com.chagas.ecommerce.payment;
 
 import br.com.chagas.ecommerce.payment.api.PaymentController;
-import br.com.chagas.ecommerce.payment.dto.PaymentPersistDto;
+import br.com.chagas.ecommerce.util.JsonUtil;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,16 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@SpringBootTest
+@AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
 public class PaymentApiTest {
 
@@ -32,57 +34,44 @@ public class PaymentApiTest {
     private PaymentService paymentService;
 
     @Autowired
-    private static MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Test
-    @DisplayName("make sure save method in service is called")
-    void saveMethodInServiceIsCalled() {
-        var deliveryPersistDto = new PaymentPersistDto("Credit Card", 1L,
-                                        BigDecimal.TEN, 5D);
-        paymentController.save(deliveryPersistDto);
-        verify(paymentService).save(any(Payment.class));
+    @DisplayName("POST /delivery/ - Sucess")
+    void save() throws Exception {
+        var payment = this.getPaymentDefault();
+        Mockito.doReturn(payment).when(paymentService).save(Mockito.any());
+        mockMvc.perform(MockMvcRequestBuilders.post("/payment")
+                .contentType(MediaTypes.HAL_JSON_VALUE)
+                .content(JsonUtil.toJson(payment)))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
+                .andExpect(jsonPath("$.mode", Is.is("Credit Card")));
+    }
+
+
+    @Test
+    @DisplayName("GET /payment/1 - Sucess")
+    void findOneSucess() throws Exception {
+        var payment = this.getPaymentDefault();
+        Mockito.doReturn(payment).when(paymentService).findById(1L);
+        mockMvc.perform(MockMvcRequestBuilders.get("/payment/{id}", 1))
+                .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("make sure find all works")
-    void findAllMethodInServiceIsCalled() {
-        paymentController.findAll(anyInt(), anyInt());
-        PageRequest of = PageRequest.of(anyInt(), anyInt());
-        verify(paymentService).findAll(of);
+    @DisplayName("GET / Payment / - Sucess")
+    void findAllSucess() throws Exception {
+        var consumerList = paymentService.findAll(PageRequest.of(1, 2));
+        Mockito.when(paymentService.findAll(PageRequest.of(1, 2))).thenReturn(consumerList);
+        Mockito.doReturn(consumerList).when(paymentService).findAll(PageRequest.of(1, 2));
+        mockMvc.perform(MockMvcRequestBuilders.get("/payment"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
+                .andExpect(jsonPath("_embedded.payments[0].mode", Is.is("Credit Card")));
     }
 
-    @Test
-    @DisplayName("make sure the find one method in service is called")
-    void findByIdMethodInServiceIsCalled() {
-        paymentController.findById(anyLong());
-        verify(paymentService).findById(anyLong());
-    }
-
-    @Test
-    @DisplayName("make sure the delete method is called")
-    void deleteByIdMethodInServiceIsCalled() {
-        paymentController.deleteById(anyLong());
-        verify(paymentService).deleteById(anyLong());
-    }
-
-//    @Test
-//    @DisplayName("GET /character/1 - Sucess")
-//    void findOneSucess() throws Exception {
-//        var delivery = this.getDeliveryDefault();
-//        Mockito.doReturn(delivery).when(paymentService).findById(1L);
-//        mockMvc.perform(MockMvcRequestBuilders.get("/payment/{id}", 1))
-//                .andExpect(status().isOk());
-//    }
-//
-//    @Test
-//    @DisplayName("GET /character/1 - NotFound")
-//    void findOneNotFound() throws Exception {
-//        Mockito.doReturn(null).when(paymentService).findById(1L);
-//        mockMvc.perform(MockMvcRequestBuilders.get("/payment/{id}", 1))
-//                .andExpect(status().isNotFound());
-//    }
-
-    private Payment getDeliveryDefault() {
-        return new Payment("Credit Card", 5L, BigDecimal.TEN, 10D);
+    private Payment getPaymentDefault() {
+        return new Payment("Credit Card", 50L, BigDecimal.valueOf(100), 55D);
     }
 }

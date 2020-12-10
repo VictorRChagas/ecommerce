@@ -1,87 +1,95 @@
 package br.com.chagas.ecommerce.product;
 
 import br.com.chagas.ecommerce.product.api.ProductController;
+import br.com.chagas.ecommerce.product.dto.ProductPersistDto;
 import br.com.chagas.ecommerce.product.models.Product;
 import br.com.chagas.ecommerce.product.models.ProductDetails;
+import br.com.chagas.ecommerce.util.JsonUtil;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@SpringBootTest
+@AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
 public class ProductApiTest {
 
-    @InjectMocks
+    @MockBean
     private ProductController productController;
 
-    @Mock
+    @MockBean
     private ProductService productService;
 
     @Autowired
-    private static MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Test
-    @DisplayName("make sure save method in service is called")
-    void saveMethodInServiceIsCalled() {
-//        var productPersistDto = new ProductPersistDto("Computer");
-//        productController.save(productPersistDto);
-//        verify(productService).save(any(Product.class));
+    @DisplayName("POST /product/ - Sucess")
+    void save() throws Exception {
+        var returnProduct = this.getProductDefault();
+        var productDto = this.getProductPersistDtoDefault();
+        Mockito.doReturn(returnProduct).when(productController).save(Mockito.any());
+        mockMvc.perform(MockMvcRequestBuilders.post("/product")
+                .contentType(MediaTypes.HAL_JSON_VALUE)
+                .content(JsonUtil.toJson(productDto)))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
+                .andExpect(jsonPath("$.name", Is.is("Cellphone")));
+    }
+
+    private ProductPersistDto getProductPersistDtoDefault() {
+        return ProductPersistDto.builder()
+                .name("Cellphone")
+                .description("Samsung 8 GB RAM, 32 GM ROM")
+                .amountStored(50L)
+                .unitPrice(BigDecimal.valueOf(599))
+                .build();
+    }
+
+
+    @Test
+    @DisplayName("GET /product/1 - Sucess")
+    void findOneSucess() throws Exception {
+        var product = this.getProductDefault();
+        Mockito.doReturn(product).when(productService).findById(1L);
+        mockMvc.perform(MockMvcRequestBuilders.get("/product/{id}", 1))
+                .andExpect(status().isOk());
+    }
+
+    private ResponseEntity<EntityModel<Product>> getProductDefault() throws Exception {
+        return ResponseEntity.ok(EntityModel.of(new Product("Cellphone", getProductDetailsDefault())));
     }
 
     @Test
-    @DisplayName("make sure find all works")
-    void findAllMethodInServiceIsCalled() {
-        productController.findAll(anyInt(), anyInt());
-        PageRequest of = PageRequest.of(anyInt(), anyInt());
-        verify(productService).findAll(of);
+    @DisplayName("GET / Product / - Sucess")
+    void findAllSucess() throws Exception {
+        var consumerList = productService.findAll(PageRequest.of(1, 2));
+        Mockito.when(productService.findAll(PageRequest.of(1, 1))).thenReturn(consumerList);
+        Mockito.doReturn(consumerList).when(productService).findAll(PageRequest.of(1, 2));
+        mockMvc.perform(MockMvcRequestBuilders.get("/product"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
+                .andExpect(jsonPath("_embedded.products[0].name", Is.is("Samsung Galaxy")));
     }
 
-    @Test
-    @DisplayName("make sure the find one method in service is called")
-    void findByIdMethodInServiceIsCalled() {
-        productController.findById(anyLong());
-        verify(productService).findById(anyLong());
-    }
-
-    @Test
-    @DisplayName("make sure the delete method is called")
-    void deleteByIdMethodInServiceIsCalled() {
-        productController.deleteById(anyLong());
-        verify(productService).deleteById(anyLong());
-    }
-
-//    @Test
-//    @DisplayName("GET Find By Id - Sucess")
-//    void findOneSucess() throws Exception {
-//        var delivery = this.getProductDefault();
-//        Mockito.doReturn(delivery).when(productService).findById(1L);
-//        mockMvc.perform(MockMvcRequestBuilders.get("/product/{id}", 1))
-//                .andExpect(status().isOk());
-//    }
-//
-//    @Test
-//    @DisplayName("GET Find By Id - NotFound")
-//    void findOneNotFound() throws Exception {
-//        Mockito.doReturn(null).when(productService).findById(1L);
-//        mockMvc.perform(MockMvcRequestBuilders.get("/product/{id}", 1))
-//                .andExpect(status().isNotFound());
-//    }
-
-    private Product getProductDefault() throws Exception {
-        return new Product("Computer",
-                new ProductDetails("HP Computer", "54789245", BigDecimal.valueOf(899)));
+    private ProductDetails getProductDetailsDefault() {
+        return new ProductDetails("", "54651231546", BigDecimal.valueOf(599));
     }
 }

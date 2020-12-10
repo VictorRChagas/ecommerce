@@ -46,9 +46,9 @@ public class Payment implements Serializable {
         this.id = id;
     }
 
-    public Payment(@NotNull String name, @NotNull Long installments,
+    public Payment(@NotNull String mode, @NotNull Long installments,
                    @NotNull BigDecimal amount, @NotNull Double installmentValue) {
-        this.setMode(name);
+        this.setMode(mode);
         this.setInstallments(installments);
         this.setAmount(amount);
         this.setInstallmentValue(installmentValue);

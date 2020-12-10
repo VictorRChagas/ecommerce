@@ -32,10 +32,6 @@ public class Delivery {
     public Delivery() {
     }
 
-    public Delivery(Long id) {
-        this.id = id;
-    }
-
     public Delivery(@NotNull @NotEmpty String mode) {
         this.setMode(mode);
     }

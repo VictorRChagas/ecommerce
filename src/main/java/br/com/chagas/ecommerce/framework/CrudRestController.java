@@ -47,7 +47,7 @@ public abstract class CrudRestController<T, ID, X> {
 
     @PutMapping("{id}")
     public ResponseEntity<EntityModel<T>> updateById(@PathVariable("id") ID id, @RequestBody X dto) {
-        LOGGER.debug("Updating consumer");
+        LOGGER.debug("Updating entity");
         var consumer = getService().findById(id);
         modelMapper.map(dto, consumer);
         var entityModel = getRepresentationModelAssembler().toModel(getService().save(consumer));
