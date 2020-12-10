@@ -6,7 +6,6 @@ import br.com.chagas.ecommerce.product.ProductService;
 import br.com.chagas.ecommerce.product.dto.ProductPersistDto;
 import br.com.chagas.ecommerce.product.dto.ProductUpdateDto;
 import br.com.chagas.ecommerce.product.models.Product;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
@@ -19,17 +18,15 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/product")
-public class ProductController extends CrudRestController<Product, Long> {
+public class ProductController extends CrudRestController<Product, Long, ProductPersistDto> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
     private final ProductService productService;
     private final ProductModelAssembler productModelAssembler;
-    private final ModelMapper modelMapper;
 
-    public ProductController(ProductService productService, ProductModelAssembler productModelAssembler, ModelMapper modelMapper) {
+    public ProductController(ProductService productService, ProductModelAssembler productModelAssembler) {
         this.productService = productService;
         this.productModelAssembler = productModelAssembler;
-        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -40,28 +37,6 @@ public class ProductController extends CrudRestController<Product, Long> {
     @Override
     public RepresentationModelAssembler<Product, EntityModel<Product>> getRepresentationModelAssembler() {
         return productModelAssembler;
-    }
-
-    @PostMapping
-    public ResponseEntity<EntityModel<Product>> save(@NonNull @Valid @RequestBody ProductPersistDto productPersist) throws Exception {
-        LOGGER.debug("Saving new Product");
-        var product = new Product(productPersist);
-        var entityModel = productModelAssembler.toModel(productService.save(product));
-
-        return ResponseEntity
-                .ok(entityModel);
-    }
-
-    @PutMapping("{id}")
-    public ResponseEntity<EntityModel<Product>> updateById(
-            @NonNull @Valid @RequestBody ProductPersistDto productPersist,
-            @NonNull @PathVariable Long id) {
-        LOGGER.debug("Updating product id: {}", id);
-        var product = productService.findById(id);
-        modelMapper.map(productPersist, product);
-        var entityModel = productModelAssembler.toModel(productService.save(product));
-
-        return ResponseEntity.ok(entityModel);
     }
 
     @PatchMapping("{id}")

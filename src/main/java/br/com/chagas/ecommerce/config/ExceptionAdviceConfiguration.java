@@ -33,6 +33,7 @@ public class ExceptionAdviceConfiguration {
         return e.getMessage();
     }
 
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<?> handleConstraintViolationException(DataIntegrityViolationException e) {
         return Optional.ofNullable(e.getMessage())

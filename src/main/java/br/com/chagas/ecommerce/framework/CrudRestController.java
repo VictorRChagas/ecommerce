@@ -1,26 +1,59 @@
 package br.com.chagas.ecommerce.framework;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.lang.reflect.ParameterizedType;
 import java.util.stream.Collectors;
 
-public abstract class CrudRestController<T, ID> {
+@Component
+public abstract class CrudRestController<T, ID, X> {
 
     private final Logger LOGGER = LoggerFactory.getLogger("crudrest");
 
     public abstract CrudService<T, ID> getService();
+
     public abstract RepresentationModelAssembler<T, EntityModel<T>> getRepresentationModelAssembler();
+
+    @Autowired
+    protected ModelMapper modelMapper;
+
+    private final Class persistentClass;
+
+    public CrudRestController() {
+        this.persistentClass = (Class) ((ParameterizedType) this.getClass().getGenericSuperclass())
+                .getActualTypeArguments()[0];
+    }
+
+    @PostMapping
+    public ResponseEntity<EntityModel<T>> save(@NonNull @Valid @RequestBody X dto) {
+        LOGGER.debug("Saving new entity");
+        var object = (T) modelMapper.map(dto, persistentClass);
+        var entityModel = getRepresentationModelAssembler().toModel(getService().save(object));
+
+        return ResponseEntity.ok(entityModel);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<EntityModel<T>> updateById(@PathVariable("id") ID id, @RequestBody X dto) {
+        LOGGER.debug("Updating consumer");
+        var consumer = getService().findById(id);
+        modelMapper.map(dto, consumer);
+        var entityModel = getRepresentationModelAssembler().toModel(getService().save(consumer));
+
+        return ResponseEntity.ok(entityModel);
+    }
 
     @GetMapping
     public CollectionModel<EntityModel<T>> findAll(

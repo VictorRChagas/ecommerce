@@ -11,14 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/order")
-public class OrderController extends CrudRestController<Order, Long> {
+public class OrderController extends CrudRestController<Order, Long, OrderPersistDto> {
 
     private final OrderService service;
     private final OrderModelAssembler orderModelAssembler;
@@ -40,15 +40,6 @@ public class OrderController extends CrudRestController<Order, Long> {
     @Override
     public RepresentationModelAssembler<Order, EntityModel<Order>> getRepresentationModelAssembler() {
         return orderModelAssembler;
-    }
-
-    @PostMapping
-    public ResponseEntity<EntityModel<Order>> save(@NonNull @Valid @RequestBody OrderPersistDto orderPersistDto) {
-        LOGGER.debug("Saving new order");
-        var order = orderConverter.buildOrder(orderPersistDto);
-        var entityModel = orderModelAssembler.toModel(service.save(order));
-
-        return ResponseEntity.ok(entityModel);
     }
 
     @PostMapping("approve/{id}")

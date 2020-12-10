@@ -10,15 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
-import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/manufacturer")
-public class ManufacturerController extends CrudRestController<Manufacturer, Long> {
+public class ManufacturerController extends CrudRestController<Manufacturer, Long, ManufacturerPersistDto> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Manufacturer.class);
     private final ManufacturerService service;
@@ -39,26 +36,5 @@ public class ManufacturerController extends CrudRestController<Manufacturer, Lon
     @Override
     public RepresentationModelAssembler<Manufacturer, EntityModel<Manufacturer>> getRepresentationModelAssembler() {
         return manufacturerModelAssembler;
-    }
-
-    @PostMapping
-    public ResponseEntity<EntityModel<Manufacturer>> save(@NonNull @Valid @RequestBody ManufacturerPersistDto dto) {
-        LOGGER.debug("Saving new Manufacturer");
-        var manufacturer = modelMapper.map(dto, Manufacturer.class);
-        var entityModel = manufacturerModelAssembler.toModel(service.save(manufacturer));
-
-        return ResponseEntity.ok(entityModel);
-    }
-
-    @PutMapping("{id}")
-    public ResponseEntity<EntityModel<Manufacturer>> updateById(@PathVariable("id") Long id,
-                                                            @RequestBody ManufacturerPersistDto dto) {
-        LOGGER.debug("Updating consumer");
-        var manufacturer = service.findById(id);
-        modelMapper.map(dto, manufacturer);
-        var entityModel = manufacturerModelAssembler.toModel(service.save(manufacturer));
-
-        return ResponseEntity
-                .ok(entityModel);
     }
 }

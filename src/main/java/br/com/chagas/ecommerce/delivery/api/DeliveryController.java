@@ -10,20 +10,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
-import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/delivery")
-public class DeliveryController extends CrudRestController<Delivery, Long> {
+public class DeliveryController extends CrudRestController<Delivery, Long, DeliveryPersistDto> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Delivery.class);
     private final DeliveryService service;
     private final DeliveryModelAssembler deliveryModelAssembler;
-    private final ModelMapper modelMapper;
 
     public DeliveryController(DeliveryService service, DeliveryModelAssembler deliveryModelAssembler, ModelMapper modelMapper) {
         this.service = service;
@@ -39,25 +35,5 @@ public class DeliveryController extends CrudRestController<Delivery, Long> {
     @Override
     public RepresentationModelAssembler<Delivery, EntityModel<Delivery>> getRepresentationModelAssembler() {
         return deliveryModelAssembler;
-    }
-
-    @PostMapping
-    public ResponseEntity<EntityModel<Delivery>> save(@NonNull @Valid @RequestBody DeliveryPersistDto dto) {
-        LOGGER.debug("Saving new Delivery");
-        var delivery = modelMapper.map(dto, Delivery.class);
-        var entityModel = deliveryModelAssembler.toModel(service.save(delivery));
-
-        return ResponseEntity.ok(entityModel);
-    }
-
-    @PutMapping("{id}")
-    public ResponseEntity<EntityModel<Delivery>> updateById(@PathVariable("id") Long id, @RequestBody DeliveryPersistDto dto) {
-        LOGGER.debug("Updating consumer");
-        var delivery = service.findById(id);
-        modelMapper.map(dto, delivery);
-        var entityModel = deliveryModelAssembler.toModel(service.save(delivery));
-
-        return ResponseEntity
-                .ok(entityModel);
     }
 }
