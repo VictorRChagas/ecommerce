@@ -25,6 +25,7 @@ public class ProductOrder {
 
     @NotNull
     @OneToOne
+    @JoinColumn(name = "ID_PRODUCT")
     private Product product;
 
     /***
@@ -34,7 +35,8 @@ public class ProductOrder {
     public ProductOrder() {
     }
 
-    public ProductOrder(@NotNull Long productId) {
-        this.product = new Product(productId);
+    public ProductOrder(@NotNull Product product, @NotNull Order order) {
+        this.product = product;
+        this.order = order;
     }
 }

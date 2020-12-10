@@ -11,6 +11,7 @@ public class ConsumerTest {
 
     private static final String NAME = "João Victor";
     private static final String EMAIL = "jvrc2000@outlook.com";
+    private static final String PHONE = "5546991203609";
 
     @Test
     void emptyConstructor() {
@@ -19,7 +20,7 @@ public class ConsumerTest {
 
     @Test
     void createNewInstance() {
-        var consumer = new Consumer(NAME, EMAIL);
+        var consumer = new Consumer(NAME, EMAIL, PHONE);
         Assertions.assertNull(consumer.getId());
         Assertions.assertEquals(EMAIL, consumer.getEmail());
     }
@@ -27,12 +28,12 @@ public class ConsumerTest {
     @Test
     @DisplayName("throw exception for invalid mails")
     void thorwsIllegalArgumentExceptionIfEmailIsNotValid() {
-        assertThrows(IllegalArgumentException.class, () -> new Consumer(NAME, "test.com"));
+        assertThrows(IllegalArgumentException.class, () -> new Consumer(NAME, "test.com", null));
     }
 
     @Test
     @DisplayName("throw exception for invalid mails")
     void thorwsIllegalArgumentExceptionIfEmailIsEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> new Consumer(NAME, ""));
+        assertThrows(IllegalArgumentException.class, () -> new Consumer(NAME, "", PHONE));
     }
 }

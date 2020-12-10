@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConsumerServiceImpl extends CrudServiceImpl<Consumer, Long> implements ConsumerService {
 
-    private ConsumerRepository repository;
+    private final ConsumerRepository repository;
 
     public ConsumerServiceImpl(ConsumerRepository repository) {
         this.repository = repository;

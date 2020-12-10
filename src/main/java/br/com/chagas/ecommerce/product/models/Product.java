@@ -1,12 +1,16 @@
 package br.com.chagas.ecommerce.product.models;
 
+import br.com.chagas.ecommerce.manufacturer.Manufacturer;
+import br.com.chagas.ecommerce.product.dto.ProductPersistDto;
 import br.com.chagas.ecommerce.validator.Validator;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -24,7 +28,14 @@ public class Product implements Serializable {
 
     @Column(name = "NAME", nullable = false, length = 100)
     private String name;
+    
+    @JsonManagedReference
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+    private ProductDetails productDetails;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ID_MANUFACTURER", nullable = false)
+    private Manufacturer manufacturer;
 
     @Deprecated
     public Product() {
@@ -32,6 +43,13 @@ public class Product implements Serializable {
 
     public Product(Long id) {
         this.id = id;
+    }
+
+    public Product(ProductPersistDto productPersistDto) {
+        this.name = productPersistDto.getName();
+        this.productDetails = new ProductDetails(productPersistDto);
+        this.manufacturer = new Manufacturer(productPersistDto.getManufacturerId());
+        this.productDetails.setProduct(this);
     }
 
     public Product(@NonNull String descricao, @NonNull ProductDetails productDetails) throws Exception {
@@ -44,6 +62,10 @@ public class Product implements Serializable {
     }
 
     public void setProductDetails(@NonNull ProductDetails productDetails) {
-//        this.productDetails = Objects.requireNonNull(productDetails, "Value must not be null");
+        this.productDetails = Objects.requireNonNull(productDetails, "Value must not be null");
+    }
+
+    public void setManufacturer(@NotNull Manufacturer manufacturer) {
+        this.manufacturer = Objects.requireNonNull(manufacturer, "Value must not be null");
     }
 }

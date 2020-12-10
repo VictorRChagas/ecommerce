@@ -7,6 +7,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Getter
@@ -29,6 +30,14 @@ public class Payment implements Serializable {
     @Column(name = "INSTALLMENTS", nullable = false, scale = 10, precision = 2)
     private Long installments;
 
+    @NotNull
+    @Column(name = "AMOUNT", nullable = false, scale = 10, precision = 2)
+    private BigDecimal amount;
+
+    @NotNull
+    @Column(name = "INSTALLMENT_VALUE", nullable = false, scale = 10, precision = 2)
+    private Double installmentValue;
+
     @Deprecated
     public Payment() {
     }
@@ -37,9 +46,12 @@ public class Payment implements Serializable {
         this.id = id;
     }
 
-    public Payment(@NotNull String name, @NotNull Long installments) {
+    public Payment(@NotNull String name, @NotNull Long installments,
+                   @NotNull BigDecimal amount, @NotNull Double installmentValue) {
         this.setMode(name);
         this.setInstallments(installments);
+        this.setAmount(amount);
+        this.setInstallmentValue(installmentValue);
     }
 
     public void setMode(String mode) {
@@ -51,5 +63,13 @@ public class Payment implements Serializable {
 
     public void setInstallments(@NotNull Long installments) {
         this.installments = Objects.requireNonNull(installments, "Installments must not be null");
+    }
+
+    public void setAmount(@NotNull BigDecimal amount) {
+        this.amount = Objects.requireNonNull(amount, "Amount must not be null");
+    }
+
+    public void setInstallmentValue(@NotNull Double installmentValue) {
+        this.installmentValue = Objects.requireNonNull(installmentValue, "Value of installments must not be null");
     }
 }

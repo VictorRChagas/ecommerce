@@ -27,6 +27,10 @@ public class Consumer {
     @Column(name = "NAME", nullable = false, length = 100)
     private String name;
 
+    @NotNull
+    @Column(name = "PHONE_NUMBER", nullable = false, length = 20)
+    private String phone;
+
     @Email(message = "invalid e-mail")
     @NotNull
     @Column(name = "EMAIL", nullable = false, scale = 10, precision = 2)
@@ -43,9 +47,10 @@ public class Consumer {
         this.id = id;
     }
 
-    public Consumer(@NotNull String name, @Email @NotNull String email) {
+    public Consumer(@NotNull String name, @Email @NotNull String email, String phone) {
         this.setName(name);
         this.setEmail(email);
+        this.setPhone(phone);
     }
 
     public void setName(@NotNull @NotEmpty String name) {
@@ -56,6 +61,10 @@ public class Consumer {
         if (!Validator.isEmail.test(email)) {
             throw new IllegalArgumentException("Email is not valid");
         }
-        this.email = Objects.requireNonNull(email, "Email must not be null");;
+        this.email = Objects.requireNonNull(email, "Email must not be null");
+    }
+
+    public void setPhone(String phone) {
+        this.phone = Objects.requireNonNull(phone, "Phone must not be null");
     }
 }

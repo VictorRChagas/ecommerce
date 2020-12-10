@@ -2,6 +2,8 @@
 
 <h2>Greetings, Developer(s)!</h2>
 
+I suggest to clone the repository and run it locally for avoiding possible issues, any question, call me any time.
+
 Here I'm gonna tell a lit bit more of the decisions I took 
 whereas I was doing the project.
 

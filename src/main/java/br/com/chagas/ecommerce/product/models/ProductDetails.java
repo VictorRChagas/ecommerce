@@ -1,5 +1,7 @@
 package br.com.chagas.ecommerce.product.models;
 
+import br.com.chagas.ecommerce.product.dto.ProductPersistDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -18,6 +20,12 @@ public class ProductDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
+
+    @NotNull
+    @JsonBackReference
+    @OneToOne(optional = false)
+    @JoinColumn(name = "ID_PRODUCT", unique = true)
+    private Product product;
 
     @Column(name = "DESCRIPTION", nullable = false, length = 100)
     private String description;
@@ -38,6 +46,12 @@ public class ProductDetails {
         this.setUnitPrice(unitPrice);
     }
 
+    public ProductDetails(ProductPersistDto productPersistDto) {
+        this.setDescription(productPersistDto.getDescription());
+        this.setBarCode(productPersistDto.getBarCode());
+        this.setUnitPrice(productPersistDto.getUnitPrice());
+    }
+
     public void setDescription(@NotEmpty @NotNull String description) {
         this.description = Objects.requireNonNull(description, "Description of the details must not be null");
     }
@@ -48,5 +62,9 @@ public class ProductDetails {
 
     public void setUnitPrice(@NotNull BigDecimal unitPrice) {
         this.unitPrice = Objects.requireNonNull(unitPrice, "Unitprice must not be null");
+    }
+
+    public void setProduct(@NotNull Product product) {
+        this.product = Objects.requireNonNull(product, "Product must not be null");
     }
 }

@@ -1,14 +1,7 @@
 package br.com.chagas.ecommerce.order;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.ThrowingSupplier;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 public class OrderTest {
-
+//
 //    private static final String NAME = "João Victor";
 //    private static final String EMAIL = "jvrc2000@outlook.com";
 //
@@ -19,9 +12,11 @@ public class OrderTest {
 //
 //    @Test
 //    void createNewInstance() {
-//        var consumer = new Order(NAME, EMAIL);
+//        var orderPersistDto = new OrderPersistDto(1L, 1L, 1L, List.of(1L, 2L));
+//        var consumer = new Order(orderPersistDto);
 //        Assertions.assertNull(consumer.getId());
-//        Assertions.assertEquals(EMAIL, consumer.getEmail());
+//        Assertions.assertNull(consumer.getDelivery().getId());
+//        Assertions.assertNull(consumer.getPayment().getId());
 //    }
 //
 //    @Test

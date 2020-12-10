@@ -36,6 +36,10 @@ public class Manufacturer {
         this.setName(name);
     }
 
+    public Manufacturer(Long manufacturerId) {
+        this.id = manufacturerId;
+    }
+
     public void setName(String name) {
         var isInvalid = Validator.isNull.or(Validator.isEmpty).test(name);
         if (isInvalid) {

@@ -19,6 +19,9 @@ public class ConsumerPersistDto {
     @NotNull
     private String email;
 
+    @NotNull
+    private String phone;
+
     public ConsumerPersistDto() {
     }
 }

@@ -29,6 +29,11 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Long> implements Or
     }
 
     @Override
+    protected void postSave(Order savedEntity) {
+        setStatus(savedEntity);
+    }
+
+    @Override
     public Boolean approveOrder(Long orderId) {
         return repository.approveOrder(orderId) == 1;
     }
@@ -43,9 +48,12 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Long> implements Or
         all.stream().forEach(this::setStatus);
     }
 
+    /***
+     * As I used dto for saving the object the return wasn't fecthing all fields
+     */
     @Override
-    protected void postFindOne(Order object) {
-        this.setStatus(object);
+    protected void postFindOne(Order order) {
+        this.setStatus(order);
     }
 
     private void setStatus(Order order) {

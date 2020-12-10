@@ -26,7 +26,7 @@ public class ManufacturerTest {
     @Test
     @DisplayName("throw exception for invalid mails")
     void thorwsIllegalArgumentExceptionIfEmailIsNotValid() {
-        assertThrows(IllegalArgumentException.class, () -> new Manufacturer(null));
+        assertThrows(IllegalArgumentException.class, () -> new Manufacturer((String) null));
     }
 
     @Test

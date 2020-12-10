@@ -26,7 +26,7 @@ public class ProductTest {
         var product = new Product(NAME, PRODUCT_DETAILS);
         Assertions.assertNull(product.getId());
         Assertions.assertEquals(product.getName(), NAME);
-//        Assertions.assertEquals(product.getProductDetails(), PRODUCT_DETAILS);
+        Assertions.assertEquals(product.getProductDetails(), PRODUCT_DETAILS);
     }
 
     @Test

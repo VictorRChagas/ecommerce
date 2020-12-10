@@ -3,7 +3,7 @@ package br.com.chagas.ecommerce.order.api;
 import br.com.chagas.ecommerce.framework.CrudRestController;
 import br.com.chagas.ecommerce.framework.CrudService;
 import br.com.chagas.ecommerce.order.Order;
-import br.com.chagas.ecommerce.order.OrderFactory;
+import br.com.chagas.ecommerce.order.OrderConverter;
 import br.com.chagas.ecommerce.order.OrderService;
 import br.com.chagas.ecommerce.order.dto.OrderPersistDto;
 import org.slf4j.Logger;
@@ -22,14 +22,14 @@ public class OrderController extends CrudRestController<Order, Long> {
 
     private final OrderService service;
     private final OrderModelAssembler orderModelAssembler;
-    private final OrderFactory orderFactory;
+    private final OrderConverter orderConverter;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
 
-    public OrderController(OrderService service, OrderModelAssembler orderModelAssembler, OrderFactory orderFactory) {
+    public OrderController(OrderService service, OrderModelAssembler orderModelAssembler, OrderConverter orderConverter) {
         this.service = service;
         this.orderModelAssembler = orderModelAssembler;
-        this.orderFactory = orderFactory;
+        this.orderConverter = orderConverter;
     }
 
     @Override
@@ -45,19 +45,19 @@ public class OrderController extends CrudRestController<Order, Long> {
     @PostMapping
     public ResponseEntity<EntityModel<Order>> save(@NonNull @Valid @RequestBody OrderPersistDto orderPersistDto) {
         LOGGER.debug("Saving new order");
-        var order = orderFactory.buildOrder(orderPersistDto);
+        var order = orderConverter.buildOrder(orderPersistDto);
         var entityModel = orderModelAssembler.toModel(service.save(order));
 
         return ResponseEntity.ok(entityModel);
     }
 
-    @PostMapping("{id}}")
+    @PostMapping("approve/{id}")
     public ResponseEntity<Boolean> approveOrder(@PathVariable("id") Long orderId) {
         LOGGER.debug("Approving order id: {}", orderId);
         return ResponseEntity.ok(service.approveOrder(orderId));
     }
 
-    @PostMapping("cancel-order/{id}}")
+    @PostMapping("cancel-order/{id}")
     public ResponseEntity<Boolean> cancelOrder(@PathVariable("id") Long orderId) {
         LOGGER.debug("Cancelling order id: {}", orderId);
         return ResponseEntity.ok(service.cancelOrder(orderId));

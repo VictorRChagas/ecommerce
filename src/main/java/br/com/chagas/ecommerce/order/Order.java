@@ -2,15 +2,16 @@ package br.com.chagas.ecommerce.order;
 
 import br.com.chagas.ecommerce.consumer.Consumer;
 import br.com.chagas.ecommerce.delivery.Delivery;
-import br.com.chagas.ecommerce.order.dto.OrderPersistDto;
 import br.com.chagas.ecommerce.payment.Payment;
 import br.com.chagas.ecommerce.productOrder.ProductOrder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -44,9 +45,9 @@ public class Order {
     @Column(name = "STATUS", nullable = false)
     private OrderStatus orderStatus;
 
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-//    private Set<ProductOrder> productSet = new HashSet<>();
+    @JsonManagedReference
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set<ProductOrder> productSet = new HashSet<>();
 
     @NotNull
     private transient String status;
@@ -58,16 +59,14 @@ public class Order {
     public Order() {
     }
 
-    public Order(OrderPersistDto orderPersistDto) {
-        this.consumer = new Consumer(orderPersistDto.getConsumerId());
-        this.delivery = new Delivery(orderPersistDto.getDeliveryId());
-        this.payment = new Payment(orderPersistDto.getPaymentId());
-//        this.productSet = orderPersistDto.getProductIds().stream()
-//                .map(ProductOrder::new).collect(Collectors.toSet());
+    public Order(Consumer consumer, Payment payment, Delivery delivery) {
+        this.consumer = consumer;
+        this.payment = payment;
+        this.delivery = delivery;
     }
 
     public void setProductSet(Set<ProductOrder> productSet) {
-//        this.productSet = productSet;
+        this.productSet = productSet;
     }
 
     public void setOrderStatus(@NotNull OrderStatus status) {

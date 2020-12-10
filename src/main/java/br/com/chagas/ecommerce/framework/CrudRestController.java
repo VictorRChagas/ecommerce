@@ -1,6 +1,5 @@
 package br.com.chagas.ecommerce.framework;
 
-import br.com.chagas.ecommerce.product.api.ProductController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -15,9 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 public abstract class CrudRestController<T, ID> {
 
@@ -37,7 +33,7 @@ public abstract class CrudRestController<T, ID> {
                 .stream().map(getRepresentationModelAssembler()::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(objectList, linkTo(methodOn(ProductController.class).findAll(size, page)).withSelfRel());
+        return CollectionModel.of(objectList);
     }
 
     @GetMapping("{id}")
