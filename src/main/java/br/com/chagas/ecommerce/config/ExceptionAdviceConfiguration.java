@@ -1,5 +1,6 @@
 package br.com.chagas.ecommerce.config;
 
+import br.com.chagas.ecommerce.shared.Error;
 import br.com.chagas.ecommerce.util.MessageUtil;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -33,14 +34,14 @@ public class ExceptionAdviceConfiguration {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String> handleConstraintViolationException(DataIntegrityViolationException e) {
+    public ResponseEntity<?> handleConstraintViolationException(DataIntegrityViolationException e) {
         return Optional.ofNullable(e.getMessage())
                 .map(it -> it.substring(
                         it.indexOf(DATABASE_SCHEMA) + DATABASE_SCHEMA_LENGTH,
                         it.indexOf(UNIQUE_INDEX_SUFFIX)
                 ))
                 .map(messageUtil::get)
-                .map(it -> ResponseEntity.status(HttpStatus.FORBIDDEN).body(it))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getCause().getMessage()));
+                .map(it -> ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Error(it)))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Error(e.getCause().getMessage())));
     }
 }
